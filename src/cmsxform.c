@@ -805,9 +805,9 @@ _cmsTRANSFORM* AllocEmptyTransform(cmsContext ContextID, cmsPipeline* lut,
                             p->FromInputFloat = _cmsGetFormatter(ContextID, *InputFormat, cmsFormatterInput, CMS_PACK_FLAGS_FLOAT).FmtFloat;
                             p->ToOutputFloat = _cmsGetFormatter(ContextID, *OutputFormat, cmsFormatterOutput, CMS_PACK_FLAGS_FLOAT).FmtFloat;
 
-                            // Save the day? (Ignore the warning)
+                            // Save the day?
                             if (Plugin->OldXform) {
-                                   p->OldXform = (_cmsTransformFn) p->xform;
+                                   p->OldXform = (_cmsTransformFn)(void*)(p->xform);
                                    p->xform = _cmsTransform2toTransformAdaptor;
                             }
                              

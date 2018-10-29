@@ -386,26 +386,23 @@ cmsBool isfirstidchar(int c)
 static
 cmsBool isabsolutepath(const char *path)
 {
-    char ThreeChars[4];
-
-    if(path == NULL)
+    if (path == NULL)
         return FALSE;
     if (path[0] == 0)
         return FALSE;
 
-    strncpy(ThreeChars, path, 3);
-    ThreeChars[3] = 0;
-
-    if(ThreeChars[0] == DIR_CHAR)
+    if (path[0] == DIR_CHAR)
         return TRUE;
 
 #ifdef  CMS_IS_WINDOWS_
-    if (isalpha((int) ThreeChars[0]) && ThreeChars[1] == ':')
+    if (isalpha((int) path[0]) && path[1] == ':')
         return TRUE;
 #endif
     return FALSE;
 }
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstringop-truncation"
 
 // Makes a file path based on a given reference path
 // NOTE: this function doesn't check if the path exists or even if it's legal
@@ -417,7 +414,7 @@ cmsBool BuildAbsolutePath(const char *relPath, const char *basePath, char *buffe
 
     // Already absolute?
     if (isabsolutepath(relPath)) {
-
+        // this can truncate the relPath silently
         strncpy(buffer, relPath, MaxLen);
         buffer[MaxLen-1] = 0;
         return TRUE;
@@ -439,6 +436,7 @@ cmsBool BuildAbsolutePath(const char *relPath, const char *basePath, char *buffe
     return TRUE;
 }
 
+#pragma GCC diagnostic pop
 
 // Make sure no exploit is being even tried
 static
@@ -974,6 +972,8 @@ void SkipEOLN(cmsIT8* it8)
     }
 }
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstringop-truncation"
 
 // Returns a string holding current value
 static
@@ -1001,6 +1001,8 @@ cmsBool GetVal(cmsIT8* it8, char* Buffer, cmsUInt32Number max, const char* Error
     Buffer[max] = 0;
     return TRUE;
 }
+
+#pragma GCC diagnostic pop
 
 // ---------------------------------------------------------- Table
 
@@ -1114,7 +1116,7 @@ char *AllocString(cmsIT8* it8, const char* str)
 
 
     ptr = (char *) AllocChunk(it8, Size);
-    if (ptr) strncpy (ptr, str, Size-1);
+    if (ptr) strcpy (ptr, str);
 
     return ptr;
 }
@@ -1328,11 +1330,16 @@ cmsHANDLE  CMSEXPORT cmsIT8Alloc(cmsContext ContextID)
    return (cmsHANDLE) it8;
 }
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstringop-truncation"
 
 const char* CMSEXPORT cmsIT8GetSheetType(cmsHANDLE hIT8)
 {
         return GetTable((cmsIT8*) hIT8)->SheetType;
 }
+
+#pragma GCC diagnostic pop
+
 
 cmsBool CMSEXPORT cmsIT8SetSheetType(cmsHANDLE hIT8, const char* Type)
 {

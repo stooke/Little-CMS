@@ -3174,8 +3174,8 @@ cmsBool Type_NamedColor_Write(struct _cms_typehandler_struct* self, cmsIOHANDLER
     if (!_cmsWriteUInt32Number(io, nColors)) return FALSE;
     if (!_cmsWriteUInt32Number(io, NamedColorList ->ColorantCount)) return FALSE;
 
-    strncpy(prefix, (const char*) NamedColorList->Prefix, 32);
-    strncpy(suffix, (const char*) NamedColorList->Suffix, 32);
+    strncpy(prefix, (const char*) NamedColorList->Prefix, 33);
+    strncpy(suffix, (const char*) NamedColorList->Suffix, 33);
 
     suffix[32] = prefix[32] = 0;
 
